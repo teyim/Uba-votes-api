@@ -8,11 +8,11 @@ dotenv.config();
 const app = express();
 
 //Import routes
-import campaigns from "./routes/campaigns.js";
+import candidates from "./routes/candidates.js";
 
 //middlewares
 app.use(bodyParser.json());
-app.use("/campaigns", campaigns);
+app.use("/candidates", candidates);
 
 //routes
 app.get("/", (req, res) => {

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
 
-const campaignSchema = new Schema({
+const candidateSchema = new Schema({
   fullName: String,
   bio: String,
   campaign: Number,
@@ -16,4 +16,4 @@ const campaignSchema = new Schema({
   image: String,
 });
 
-export const Campaign = mongoose.model("campaigns", campaignSchema);
+export const Candidate = mongoose.model("candidates", candidateSchema);

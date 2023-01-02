@@ -1,11 +1,11 @@
 import express from "express";
-import { Campaign } from "../models/campaign.js";
+import { Candidate } from "../models/candidate.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const campaigns = await Campaign.find();
-    res.json(campaigns);
+    const candidates = await Candidate.find();
+    res.json(candidates);
   } catch (error) {
     res.json({ message: error });
   }
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const { firstName, bio, campaign, votes, matricule, age, sex, image } =
     req.body;
-  const campaignInstance = new Campaign({
+  const candidateInstance = new Candidate({
     firstName,
     bio,
     campaign,
@@ -25,8 +25,8 @@ router.post("/", async (req, res) => {
     image,
   });
   try {
-    await campaignInstance.save();
-    res.send("saved campaigned sucessfully!!").status(200);
+    await candidateInstance.save();
+    res.send("candidate saved sucessfully!!").status(200);
   } catch (error) {
     res.json({ message: error });
   }
