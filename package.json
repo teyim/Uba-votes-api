@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend for online voting system",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "nodemon app.js"
   },
