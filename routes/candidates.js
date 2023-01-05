@@ -59,11 +59,23 @@ router.delete("/:candidateId", async (req, res) => {
 //update Candidate Info
 router.patch("/:candidateId", async (req, res) => {
   const { candidateId } = req.params;
-  const { bio, fullName } = req.body;
+  const { firstName, bio, campaign, votes, matricule, age, sex, image } =
+    req.body;
   try {
     const updatedCandidates = await Candidate.updateOne(
       { _id: candidateId },
-      { $set: { bio: bio, fullName: fullName } }
+      {
+        $set: {
+          firstName,
+          bio,
+          campaign,
+          votes,
+          matricule,
+          age,
+          sex,
+          image,
+        },
+      }
     );
     res.json(updatedCandidates);
   } catch (error) {
