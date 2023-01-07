@@ -1,9 +1,11 @@
 import express from "express";
 import { Campaign } from "../models/campaign.js";
+import { verifyToken } from "../middlewares/verifyToken.js";
 const router = express.Router();
 
 //get all campaigns
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
+  if (!req.user) return res.status(401).send("Access denied");
   try {
     const campaigns = await Campaign.find();
     res.json(campaigns);
