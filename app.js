@@ -12,13 +12,14 @@ import candidates from "./routes/candidates.js";
 import campaigns from "./routes/campaigns.js";
 import votes from "./routes/votes.js";
 import voters from "./routes/voters.js";
+import { verifyToken } from "./middlewares/verifyToken.js";
 
 //middlewares
 app.use(bodyParser.json());
 app.use("/candidates", candidates);
 app.use("/campaigns", campaigns);
 app.use("/vote", votes);
-app.use("/voters", voters);
+app.use("/voter", voters);
 
 //routes
 app.get("/", (req, res) => {
