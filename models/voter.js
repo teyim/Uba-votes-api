@@ -11,8 +11,16 @@ const voterSchema = new Schema({
     maxLength: 10,
     required: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
   campaigns: {
     type: [String],
+    required: true,
+  },
+  password: {
+    type: String,
     required: true,
   },
 });
