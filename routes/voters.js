@@ -1,39 +1,61 @@
 import express from "express";
 import { Voter } from "../models/voter.js";
+import {
+  voterRegistrationValidation,
+  voterLoginValidation,
+} from "../helpers/validation.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 const router = express.Router();
 
-//get all voters
-router.get("/", async (req, res) => {
-  try {
-    const Voters = await Voter.find();
-    res.json(Voters);
-  } catch (error) {
-    res.json({ message: error });
-  }
-});
+//regiter voter
+router.post("/register", async (req, res) => {
+  const { fullName, matricule, email, campaigns, password } = req.body;
+  //validate request data
+  const { error } = voterRegistrationValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
-//add voter
-router.post("/", async (req, res) => {
-  const { fullName, matricule, campaigns } = req.body;
-  const voterInstance = new Voter({
+  //check if voter already exist
+  const matriculeExist = await Voter.findOne({ matricule: matricule });
+  if (matriculeExist) return res.status(400).send("Matruicule already exist");
+
+  //hash password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  const voter = new Voter({
     fullName,
     matricule,
+    email,
     campaigns,
+    password: hashedPassword,
   });
+
   try {
-    await voterInstance.save();
-    res.send("voter added sucessfully!!");
+    const savedVoter = await voter.save();
+    res.send(savedVoter);
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).send(error);
   }
 });
 
 //get specific voter
-router.get("/:voterId", async (req, res) => {
-  const { voterId } = req.params;
+router.post("/login", async (req, res) => {
+  const { matricule, password } = req.body;
+  //validate request data
+  const { error } = voterLoginValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
   try {
-    const voter = await Voter.findById(voterId);
-    res.json(voter);
+    //check if voter already exist
+    const user = await Voter.findOne({ matricule: matricule });
+    if (!user) return res.status(400).send("Matricule is not found");
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) return res.status(400).send("Invalid password");
+
+    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
+    res.header("auth-token", token).send({ user, token });
   } catch (error) {
     res.json({ message: error });
   }
