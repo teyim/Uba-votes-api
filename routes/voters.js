@@ -4,12 +4,13 @@ import {
   voterRegistrationValidation,
   voterLoginValidation,
 } from "../helpers/validation.js";
+import { verifyAdminToken } from "../middlewares/verifyToken.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const router = express.Router();
 
 //regiter voter
-router.post("/register", async (req, res) => {
+router.post("/register", verifyAdminToken, async (req, res) => {
   const { fullName, matricule, email, campaigns, password } = req.body;
   //validate request data
   const { error } = voterRegistrationValidation(req.body);
@@ -62,7 +63,7 @@ router.post("/login", async (req, res) => {
 });
 
 //delete specifc voter
-router.delete("/:voterId", async (req, res) => {
+router.delete("/:voterId", verifyAdminToken, async (req, res) => {
   const { voterId } = req.params;
   try {
     const voter = await Voter.remove({ _id: voterId });
@@ -73,7 +74,7 @@ router.delete("/:voterId", async (req, res) => {
 });
 
 //update Voter Info
-router.patch("/:voterId", async (req, res) => {
+router.patch("/:voterId", verifyAdminToken, async (req, res) => {
   const { voterId } = req.params;
   const { fullName, matricule, campaigns } = req.body;
   try {
