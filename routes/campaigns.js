@@ -1,11 +1,13 @@
 import express from "express";
 import { Campaign } from "../models/campaign.js";
-import { verifyToken } from "../middlewares/verifyToken.js";
+import {
+  verifyAdminToken,
+  verifyUserToken,
+} from "../middlewares/verifyToken.js";
 const router = express.Router();
 
 //get all campaigns
-router.get("/", verifyToken, async (req, res) => {
-  if (!req.user) return res.status(401).send("Access denied");
+router.get("/", verifyAdminToken, async (req, res) => {
   try {
     const campaigns = await Campaign.find();
     res.json(campaigns);
@@ -15,7 +17,7 @@ router.get("/", verifyToken, async (req, res) => {
 });
 
 //add campaign
-router.post("/", async (req, res) => {
+router.post("/", verifyAdminToken, async (req, res) => {
   const { name, desc, startTime, endTime, votingPositions } = req.body;
   const candidateInstance = new Campaign({
     name,
@@ -44,7 +46,7 @@ router.get("/:campaignId", async (req, res) => {
 });
 
 //delete specifc campaign
-router.delete("/:campaignId", async (req, res) => {
+router.delete("/:campaignId", verifyAdminToken, async (req, res) => {
   const { campaignId } = req.params;
   try {
     const campaign = await Candidate.remove({ _id: campaignId });
@@ -55,7 +57,7 @@ router.delete("/:campaignId", async (req, res) => {
 });
 
 //update Campaign Info
-router.patch("/:campaignId", async (req, res) => {
+router.patch("/:campaignId", verifyAdminToken, async (req, res) => {
   const { campaignId } = req.params;
   const { name, desc, startTime, endTime, votingPositions } = req.body;
   try {
