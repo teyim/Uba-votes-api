@@ -21,3 +21,11 @@ export const voterLoginValidation = (data) => {
   });
   return schema.validate(data);
 };
+
+export const adminLoginValidation = (data) => {
+  const schema = Joi.object({
+    username: Joi.string().min(0).max(10).required(),
+    password: Joi.string().min(6).required(),
+  });
+  return schema.validate(data);
+};
