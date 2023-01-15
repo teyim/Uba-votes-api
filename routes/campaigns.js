@@ -7,7 +7,7 @@ import {
 const router = express.Router();
 
 //get all campaigns
-router.get("/", verifyAdminToken, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const campaigns = await Campaign.find();
     res.json(campaigns);
