@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express from "express";
 import { Voter } from "../models/voter.js";
 import {
   voterRegistrationValidation,
@@ -52,16 +52,16 @@ router.post("/login", async (req, res) => {
 
   try {
     //check if voter already exist
-    const user = await Voter.findOne({ matricule: matricule });
+    const user = await Voter.findOne({ matricule });
     if (!user) return res.status(400).send("Matricule is not found");
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(400).send("Invalid password");
 
-    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-    res.header("auth-token", token).send({ user, token });
+    const token = jwt.sign({ _id: user._id }, process.env.USER_TOKEN_SECRET);
+    res.header("auth-token", token).send({ ...user._doc, token });
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json(error);
   }
 });
 
