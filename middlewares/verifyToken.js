@@ -8,7 +8,7 @@ export const verifyUserToken = (req, res, next) => {
       .send("Access denied. Please login to carryout this operation");
 
   try {
-    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+    const verified = jwt.verify(token, process.env.USER_TOKEN_SECRET);
     req.user = verified;
     next();
   } catch (error) {
