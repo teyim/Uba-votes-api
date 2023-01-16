@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import { Voter } from "../models/voter.js";
 import {
   voterRegistrationValidation,
@@ -7,6 +7,7 @@ import {
 import { verifyAdminToken } from "../middlewares/verifyToken.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { sendEmail } from "../helpers/sendEmail.js";
 const router = express.Router();
 
 //regiter voter
@@ -18,7 +19,7 @@ router.post("/register", verifyAdminToken, async (req, res) => {
 
   //check if voter already exist
   const matriculeExist = await Voter.findOne({ matricule: matricule });
-  if (matriculeExist) return res.status(400).send("Matruicule already exist");
+  if (matriculeExist) return res.status(400).send("Matricule already exist");
 
   //hash password
   const salt = await bcrypt.genSalt(10);
@@ -34,7 +35,9 @@ router.post("/register", verifyAdminToken, async (req, res) => {
 
   try {
     const savedVoter = await voter.save();
-    res.send(savedVoter);
+    sendEmail(email, fullName, password, matricule)
+      .then((response) => res.send(savedVoter))
+      .catch((error) => res.status(500).send(error?.message));
   } catch (error) {
     res.status(400).send(error);
   }
