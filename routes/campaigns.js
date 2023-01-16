@@ -7,7 +7,7 @@ import {
 const router = express.Router();
 
 //get all campaigns
-router.get("/", async (req, res) => {
+router.get("/", verifyUserToken, async (req, res) => {
   try {
     const campaigns = await Campaign.find();
     res.json(campaigns);
@@ -18,13 +18,15 @@ router.get("/", async (req, res) => {
 
 //add campaign
 router.post("/", verifyAdminToken, async (req, res) => {
-  const { name, desc, startTime, endTime, votingPositions } = req.body;
+  const { name, desc, startTime, endTime, votingPositions, candidates } =
+    req.body;
   const candidateInstance = new Campaign({
     name,
     desc,
     startTime,
     endTime,
     votingPositions,
+    candidates,
   });
   try {
     await candidateInstance.save();
