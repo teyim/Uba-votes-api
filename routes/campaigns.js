@@ -61,7 +61,8 @@ router.delete("/:campaignId", verifyAdminToken, async (req, res) => {
 //update Campaign Info
 router.patch("/:campaignId", verifyAdminToken, async (req, res) => {
   const { campaignId } = req.params;
-  const { name, desc, startTime, endTime, votingPositions } = req.body;
+  const { name, desc, startTime, endTime, votingPositions, candidates } =
+    req.body;
   try {
     const updatedCampaign = await Campaign.updateOne(
       { _id: campaignId },
@@ -72,10 +73,22 @@ router.patch("/:campaignId", verifyAdminToken, async (req, res) => {
           startTime,
           endTime,
           votingPositions,
+          candidates,
         },
       }
     );
     res.json(updatedCampaign);
+  } catch (error) {
+    res.json({ message: error });
+  }
+});
+
+//add  candidate to specific campaign
+router.get("/:campaignId/:", async (req, res) => {
+  const { campaignId } = req.params;
+  try {
+    const campaign = await Campaign.findById(campaignId);
+    res.json(campaign);
   } catch (error) {
     res.json({ message: error });
   }
