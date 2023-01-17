@@ -1,6 +1,43 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
 
+const candidateSchema = new Schema({
+  fullName: {
+    type: String,
+    required: true,
+  },
+  bio: {
+    type: String,
+    required: true,
+  },
+  matricule: {
+    type: String,
+    minLength: 10,
+    maxLength: 10,
+  },
+  age: {
+    type: Number,
+    required: true,
+  },
+  sex: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  position: {
+    type: String,
+    required: true,
+  },
+});
+
+const votingPostionsSchema = new Schema({
+  abbrv: String,
+  name: String,
+});
+
 const campaignSchema = new Schema({
   name: {
     type: String,
@@ -18,44 +55,8 @@ const campaignSchema = new Schema({
     type: String,
     required: true,
   },
-  votingPositions: [String],
-  candidates: [
-    {
-      fullName: {
-        type: String,
-        required: true,
-      },
-      bio: {
-        type: String,
-        required: true,
-      },
-      campaign: {
-        type: String,
-        required: true,
-      },
-      matricule: {
-        type: String,
-        minLength: 10,
-        maxLength: 10,
-      },
-      age: {
-        type: Number,
-        required: true,
-      },
-      sex: {
-        type: String,
-        required: true,
-      },
-      image: {
-        type: String,
-        required: true,
-      },
-      position: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
+  votingPositions: [votingPostionsSchema],
+  candidates: [candidateSchema],
 });
 
 export const Campaign = mongoose.model("campaigns", campaignSchema);
