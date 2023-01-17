@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 
 //Import routes
-// import candidates from "./routes/candidates.js";
+import candidates from "./routes/candidates.js";
 import campaigns from "./routes/campaigns.js";
 import votes from "./routes/votes.js";
 import voters from "./routes/voters.js";
@@ -16,7 +16,7 @@ import admin from "./routes/admin.js";
 
 //middlewares
 app.use(bodyParser.json());
-// app.use("/candidates", candidates);
+app.use("/candidate", candidates);
 app.use("/campaigns", campaigns);
 app.use("/vote", votes);
 app.use("/voter", voters);
