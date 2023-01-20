@@ -1,97 +1,26 @@
 import express from "express";
-import { Campaign } from "../models/campaign.js";
 import {
-  verifyAdminToken,
-  verifyUserToken,
-} from "../middlewares/verifyToken.js";
+  addCampaign,
+  deleteCampaign,
+  getAllCampaigns,
+  getCampaign,
+  updateCampaign,
+} from "../controllers/campaigns.js";
 const router = express.Router();
 
 //get all campaigns
-router.get("/", verifyUserToken, async (req, res) => {
-  try {
-    const campaigns = await Campaign.find();
-    res.json(campaigns);
-  } catch (error) {
-    res.json({ message: error });
-  }
-});
+router.get("/", verifyUserToken, getAllCampaigns);
 
 //add campaign
-router.post("/", verifyAdminToken, async (req, res) => {
-  const { name, desc, startTime, endTime, votingPositions, candidates } =
-    req.body;
-  const candidateInstance = new Campaign({
-    name,
-    desc,
-    startTime,
-    endTime,
-    votingPositions,
-    candidates,
-  });
-  try {
-    await candidateInstance.save();
-    res.send("campaign saved sucessfully!!");
-  } catch (error) {
-    res.json({ message: error });
-  }
-});
+router.post("/", verifyAdminToken, addCampaign);
 
 //get specific campaign
-router.get("/:campaignId", async (req, res) => {
-  const { campaignId } = req.params;
-  try {
-    const campaign = await Campaign.findById(campaignId);
-    res.json(campaign);
-  } catch (error) {
-    res.json({ message: error });
-  }
-});
+router.get("/:campaignId", getCampaign);
 
 //delete specifc campaign
-router.delete("/:campaignId", verifyAdminToken, async (req, res) => {
-  const { campaignId } = req.params;
-  try {
-    const campaign = await Candidate.remove({ _id: campaignId });
-    res.json(campaign);
-  } catch (error) {
-    res.json({ message: error });
-  }
-});
+router.delete("/:campaignId", deleteCampaign);
 
 //update Campaign Info
-router.patch("/:campaignId", verifyAdminToken, async (req, res) => {
-  const { campaignId } = req.params;
-  const { name, desc, startTime, endTime, votingPositions, candidates } =
-    req.body;
-  try {
-    const updatedCampaign = await Campaign.updateOne(
-      { _id: campaignId },
-      {
-        $set: {
-          name,
-          desc,
-          startTime,
-          endTime,
-          votingPositions,
-          candidates,
-        },
-      }
-    );
-    res.json(updatedCampaign);
-  } catch (error) {
-    res.json({ message: error });
-  }
-});
-
-//add  candidate to specific campaign
-router.get("/:campaignId/:", async (req, res) => {
-  const { campaignId } = req.params;
-  try {
-    const campaign = await Campaign.findById(campaignId);
-    res.json(campaign);
-  } catch (error) {
-    res.json({ message: error });
-  }
-});
+router.patch("/:campaignId", updateCampaign);
 
 export default router;
