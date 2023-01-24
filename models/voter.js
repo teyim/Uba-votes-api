@@ -1,5 +1,24 @@
 import mongoose, { Schema } from "mongoose";
 
+const voteSchema = new Schema({
+  voterId: {
+    type: String,
+    required: true,
+  },
+  candidateId: {
+    type: String,
+    required: true,
+  },
+  campaignId: {
+    type: String,
+    required: true,
+  },
+  position: {
+    type: String,
+    required: true,
+  },
+});
+
 const voterSchema = new Schema({
   fullName: {
     type: String,
@@ -15,10 +34,8 @@ const voterSchema = new Schema({
     type: String,
     required: true,
   },
-  campaigns: {
-    type: [String],
-    required: true,
-  },
+  campaigns: [String],
+  votes: [voteSchema],
   password: {
     type: String,
     required: true,
