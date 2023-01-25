@@ -11,6 +11,16 @@ export const addVote = async (req, res) => {
       return res.status(404).send("Voter not found");
     }
 
+    const voterIsEligible = voter?.campaigns?.some(
+      (voterCampaignId) => voterCampaignId === campaignId
+    );
+
+    if (!voterIsEligible) {
+      return res
+        .status(400)
+        .send("Voter is not eligible to vote under campaign");
+    }
+
     const hasVoted = voter?.votes?.some(
       (vote) => vote?.campaignId === campaignId
     );
