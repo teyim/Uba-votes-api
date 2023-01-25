@@ -1,4 +1,3 @@
-import { Schema } from "mongoose";
 import { Campaign } from "../models/campaign.js";
 import { Voter } from "../models/voter.js";
 
@@ -6,21 +5,21 @@ export const addVote = async (req, res) => {
   const { voterId, candidates, campaignId } = req.body;
 
   try {
-    await Voter.findById(voterId, function (err, result) {
-      if (!err) {
-        if (!result) {
-          res.status(404).send("Voter was not found");
-        } else {
-          const hasVoted = result.votes.some(
-            (votes) => votes.campaignId === campaignId
-          );
-          if (hasVoted)
-            return res
-              .status(400)
-              .send("user has already voted for this campaign");
-        }
-      }
-    });
+    const voter = await Voter.findById(voterId);
+
+    if (!voter) {
+      return res.status(404).send("Voter not found");
+    }
+
+    const hasVoted = voter?.votes?.some(
+      (vote) => vote?.campaignId === campaignId
+    );
+
+    if (hasVoted) {
+      return res
+        .status(400)
+        .send("Voter has already casted vote for this campaign");
+    }
 
     const response = await Campaign.updateMany(
       { _id: campaignId, "candidates._id": { $in: candidates } },
@@ -30,14 +29,17 @@ export const addVote = async (req, res) => {
         },
       }
     );
+
     if (!response?.acknowledged) {
       return res.status(400).send("error update votes");
     }
-    const voter = await Voter.findOne({ _id: voterId });
-    candidates.forEach((candidateId) => {
-      voter.push({ candidateId, campaignId });
+
+    candidates?.forEach((candidateId) => {
+      voter?.votes?.push({ candidateId: candidateId, campaignId: campaignId });
     });
+
     const updatedVoter = await voter.save();
+
     res.send(updatedVoter);
   } catch (error) {
     res.json({ message: error });
