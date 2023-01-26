@@ -66,7 +66,7 @@ export const deleteVoter = async (req, res) => {
     const voter = await Voter.remove({ _id: voterId });
     res.json(voter);
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };
 
@@ -86,6 +86,6 @@ export const updateVoter = async (req, res) => {
     );
     res.json(updatedVoter);
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };

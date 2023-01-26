@@ -47,6 +47,6 @@ export const adminLogin = async (req, res) => {
     const token = jwt.sign({ username }, process.env.ADMIN_TOKEN_SECRET);
     res.header("auth-token", token).send({ admin, token });
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };

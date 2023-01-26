@@ -5,7 +5,7 @@ export const getAllCampaigns = async (req, res) => {
     const campaigns = await Campaign.find();
     res.json(campaigns);
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };
 
@@ -24,7 +24,7 @@ export const addCampaign = async (req, res) => {
     await candidateInstance.save();
     res.send("campaign saved sucessfully!!");
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };
 
@@ -34,7 +34,7 @@ export const getCampaign = async (req, res) => {
     const campaign = await Campaign.findById(campaignId);
     res.json(campaign);
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };
 
@@ -44,7 +44,7 @@ export const deleteCampaign = async (req, res) => {
     const campaign = await Candidate.remove({ _id: campaignId });
     res.json(campaign);
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };
 
@@ -68,6 +68,6 @@ export const updateCampaign = async (req, res) => {
     );
     res.json(updatedCampaign);
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };

@@ -68,6 +68,6 @@ export const addVote = async (req, res) => {
 
     res.send(updatedVoter);
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };

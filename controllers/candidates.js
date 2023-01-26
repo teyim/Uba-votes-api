@@ -19,7 +19,7 @@ export const addCandidate = async (req, res) => {
     await campaign.save();
     res.send("candidate saved sucessfully!!");
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };
 export const getCandidate = async (req, res) => {
@@ -31,7 +31,7 @@ export const getCandidate = async (req, res) => {
     );
     res.json(candidate);
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };
 
@@ -41,7 +41,7 @@ export const deleteCandidate = async (req, res) => {
     const candidate = await Candidate.remove({ _id: candidateId });
     res.json(candidate);
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };
 
@@ -67,6 +67,6 @@ export const updateCandidate = async (res, req) => {
     );
     res.json(updatedCandidates);
   } catch (error) {
-    res.json({ message: error });
+    res.status(400).json({ message: error });
   }
 };
