@@ -1,10 +1,26 @@
 import { Campaign } from "../models/campaign.js";
 import { Voter } from "../models/voter.js";
 
+const currentDateAndTime = new Date().toISOString();
+
 export const addVote = async (req, res) => {
   const { voterId, candidates, campaignId } = req.body;
 
   try {
+    const campaign = await Campaign.findById(campaignId);
+
+    if (!campaign) {
+      return res.status(404).send("Campaign not found");
+    }
+
+    //check if voting for campaign has expired or has started
+    if (currentDateAndTime > campaign.endTime)
+      return res.status(400).send("Voting for this campaign has closed");
+    if (currentDateAndTime < campaign.startTime)
+      return res
+        .status(400)
+        .send("voting for this campaign has not yet started");
+
     const voter = await Voter.findById(voterId);
 
     if (!voter) {
