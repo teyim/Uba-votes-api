@@ -46,7 +46,7 @@ export const voterLogin = async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
-    //check if voter already exist
+    //check if voter exist
     const user = await Voter.findOne({ matricule });
     if (!user) return res.status(400).send("Matricule is not found");
 

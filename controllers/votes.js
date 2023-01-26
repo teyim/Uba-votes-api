@@ -30,7 +30,6 @@ export const addVote = async (req, res) => {
     const voterIsEligible = voter?.campaigns?.some(
       (voterCampaignId) => voterCampaignId === campaignId
     );
-
     if (!voterIsEligible) {
       return res
         .status(400)

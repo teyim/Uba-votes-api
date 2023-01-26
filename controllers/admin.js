@@ -37,7 +37,7 @@ export const adminLogin = async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
-    //check if voter already exist
+    //check if admin exist
     const admin = await Admin.findOne({ username });
     if (!admin) return res.status(400).send("Username not found");
 
