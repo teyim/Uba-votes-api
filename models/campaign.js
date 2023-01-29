@@ -58,6 +58,20 @@ const campaignSchema = new Schema({
     type: String,
     required: true,
   },
+  allowedDepartment: {
+    type: String,
+    require: true,
+  },
+  allowedSchool: {
+    type: String,
+    require: true,
+  },
+  allowedLevel: {
+    type: Number,
+    min: 200,
+    max: 700,
+    require: true,
+  },
   votingPositions: [votingPostionsSchema],
   candidates: [candidateSchema],
 });

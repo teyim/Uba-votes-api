@@ -13,7 +13,7 @@ export function sendEmail(recieverEmail, fullName, password, matricule) {
       from: process.env.EMAIL,
       to: recieverEmail,
       subject: "Your Voter's account has been created",
-      html: `<b>Hey ${fullName} </b><br> Your voters account has been successully created, sign in with the your credentials to vote.<br> <b>Matriclue:</b>${matricule}<br> <b>Password:</b>${password}<br>.<b>Note: this credentials are private, and hence should not be shared with a 3rd party.</b>`,
+      html: `<b>Hey ${fullName} </b><br> Your voters account has been successully created, sign in with the your credentials to vote.`,
     };
 
     transporter.sendMail(mail_configs, (error, info) => {

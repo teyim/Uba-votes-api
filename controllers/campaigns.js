@@ -10,8 +10,17 @@ export const getAllCampaigns = async (req, res) => {
 };
 
 export const addCampaign = async (req, res) => {
-  const { name, desc, startTime, endTime, votingPositions, candidates } =
-    req.body;
+  const {
+    name,
+    desc,
+    startTime,
+    endTime,
+    votingPositions,
+    candidates,
+    allowedDepartment,
+    allowedSchool,
+    allowedLevel,
+  } = req.body;
   const candidateInstance = new Campaign({
     name,
     desc,
@@ -19,6 +28,9 @@ export const addCampaign = async (req, res) => {
     endTime,
     votingPositions,
     candidates,
+    allowedDepartment,
+    allowedSchool,
+    allowedLevel,
   });
   try {
     await candidateInstance.save();
@@ -50,8 +62,17 @@ export const deleteCampaign = async (req, res) => {
 
 export const updateCampaign = async (req, res) => {
   const { campaignId } = req.params;
-  const { name, desc, startTime, endTime, votingPositions, candidates } =
-    req.body;
+  const {
+    name,
+    desc,
+    startTime,
+    endTime,
+    votingPositions,
+    candidates,
+    allowedDepartment,
+    allowedSchool,
+    allowedLevel,
+  } = req.body;
   try {
     const updatedCampaign = await Campaign.updateOne(
       { _id: campaignId },
@@ -63,6 +84,9 @@ export const updateCampaign = async (req, res) => {
           endTime,
           votingPositions,
           candidates,
+          allowedDepartment,
+          allowedSchool,
+          allowedLevel,
         },
       }
     );

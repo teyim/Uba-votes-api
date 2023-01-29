@@ -8,7 +8,8 @@ import jwt from "jsonwebtoken";
 import { sendEmail } from "../helpers/sendEmail.js";
 
 export const registerVoter = async (req, res) => {
-  const { fullName, matricule, email, campaigns, password } = req.body;
+  const { fullName, matricule, level, school, department, password, email } =
+    req.body;
   //validate request data
   const { error } = voterRegistrationValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -25,13 +26,15 @@ export const registerVoter = async (req, res) => {
     fullName,
     matricule,
     email,
-    campaigns,
+    level,
+    school,
+    department,
     password: hashedPassword,
   });
 
   try {
     const savedVoter = await voter.save();
-    sendEmail(email, fullName, password, matricule)
+    sendEmail(email, fullName)
       .then((response) => res.send(savedVoter))
       .catch((error) => res.status(500).send(error?.message));
   } catch (error) {
@@ -57,35 +60,5 @@ export const voterLogin = async (req, res) => {
     res.header("auth-token", token).send({ ...user._doc, token });
   } catch (error) {
     res.status(400).json(error);
-  }
-};
-
-export const deleteVoter = async (req, res) => {
-  const { voterId } = req.params;
-  try {
-    const voter = await Voter.remove({ _id: voterId });
-    res.json(voter);
-  } catch (error) {
-    res.status(400).json({ message: error });
-  }
-};
-
-export const updateVoter = async (req, res) => {
-  const { voterId } = req.params;
-  const { fullName, matricule, campaigns } = req.body;
-  try {
-    const updatedVoter = await Voter.updateOne(
-      { _id: voterId },
-      {
-        $set: {
-          fullName,
-          matricule,
-          campaigns,
-        },
-      }
-    );
-    res.json(updatedVoter);
-  } catch (error) {
-    res.status(400).json({ message: error });
   }
 };

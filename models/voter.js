@@ -26,7 +26,20 @@ const voterSchema = new Schema({
     type: String,
     required: true,
   },
-  campaigns: [String],
+  level: {
+    type: Number,
+    min: 200,
+    max: 700,
+    required: true,
+  },
+  school: {
+    type: String,
+    required: true,
+  },
+  department: {
+    type: String,
+    required: true,
+  },
   votes: [voteSchema],
   password: {
     type: String,

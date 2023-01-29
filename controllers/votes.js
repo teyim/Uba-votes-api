@@ -27,13 +27,34 @@ export const addVote = async (req, res) => {
       return res.status(404).send("Voter not found");
     }
 
-    const voterIsEligible = voter?.campaigns?.some(
-      (voterCampaignId) => voterCampaignId === campaignId
-    );
-    if (!voterIsEligible) {
+    if (
+      campaign?.allowedSchool !== "All" &&
+      voter?.school !== campaign?.allowedSchool
+    ) {
       return res
         .status(400)
-        .send("Voter is not eligible to vote under campaign");
+        .send(
+          `Only students of ${campaign?.allowedSchool} are allowed to vote`
+        );
+    }
+
+    if (
+      campaign?.allowedDepartment !== "All" &&
+      voter?.department !== campaign?.allowedDepartment
+    ) {
+      return res
+        .status(400)
+        .send(
+          `Only students of the ${campaign?.allowedDepartment} are allowed to vote`
+        );
+    }
+
+    if (voter?.level !== campaign?.allowedLevel) {
+      return res
+        .status(400)
+        .send(
+          `Only students in level ${campaign?.allowedLevel} are allowed to vote`
+        );
     }
 
     const hasVoted = voter?.votes?.some(
