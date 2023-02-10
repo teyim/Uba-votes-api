@@ -35,7 +35,7 @@ export const registerVoter = async (req, res) => {
   try {
     const savedVoter = await voter.save();
     sendEmail(email, fullName)
-      .then((response) => res.send(savedVoter))
+      .then((response) => res.send("user created successfully"))
       .catch((error) => res.status(500).send(error?.message));
   } catch (error) {
     res.status(400).send(error);
@@ -56,8 +56,12 @@ export const voterLogin = async (req, res) => {
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(400).send("Invalid password");
 
+    //remove password field
+    const modifiedUserData = user.toJSON();
+    delete modifiedUserData.password;
+
     const token = jwt.sign({ _id: user._id }, process.env.USER_TOKEN_SECRET);
-    res.header("auth-token", token).send({ ...user._doc, token });
+    res.header("auth-token", token).send({ ...modifiedUserData, token });
   } catch (error) {
     res.status(400).json(error);
   }
