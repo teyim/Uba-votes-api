@@ -33,10 +33,10 @@ export const registerVoter = async (req, res) => {
   });
 
   try {
-    const savedVoter = await voter.save();
+    await voter.save();
     sendEmail(email, fullName)
-      .then((response) => res.send("user created successfully"))
-      .catch((error) => res.status(500).send(error?.message));
+      .then((response) => res.send({ message: "user created successfully" }))
+      .catch((error) => res.status(500).send(error));
   } catch (error) {
     res.status(400).send(error);
   }
