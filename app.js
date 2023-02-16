@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-
+import cors from "cors";
 dotenv.config();
 
 const app = express();
@@ -16,6 +16,8 @@ import admin from "./routes/admin.js";
 
 //middlewares
 app.use(bodyParser.json());
+app.use(cors());
+
 app.use("/candidate", candidates);
 app.use("/campaigns", campaigns);
 app.use("/vote", votes);
