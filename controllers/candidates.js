@@ -2,7 +2,8 @@ import { Campaign } from "../models/campaign.js";
 
 export const addCandidate = async (req, res) => {
   const { campaignId } = req.params;
-  const { fullName, bio, matricule, age, sex, image, position } = req.body;
+  const { position } = req.query;
+  const { fullName, bio, matricule, age, sex, image } = req.body;
   const candidate = {
     fullName,
     bio,
@@ -10,11 +11,19 @@ export const addCandidate = async (req, res) => {
     age,
     sex,
     image,
-    position,
   };
   try {
     const campaign = await Campaign.findById(campaignId);
-    campaign.candidates.push(candidate);
+
+    if (!campaign) {
+      return res.status(404).send("Campaign not found");
+    }
+
+    campaign?.votingPositions?.forEach((votingPosition) => {
+      if (position === votingPosition.abbrv) {
+        votingPosition.candidates.push(candidate);
+      }
+    });
 
     await campaign.save();
     res.send("candidate saved sucessfully!!");
