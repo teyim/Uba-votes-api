@@ -13,6 +13,7 @@ import campaigns from "./routes/campaigns.js";
 import votes from "./routes/votes.js";
 import voters from "./routes/voters.js";
 import admin from "./routes/admin.js";
+import votingPositions from "./routes/votingPositions.js";
 
 //middlewares
 app.use(bodyParser.json());
@@ -20,6 +21,7 @@ app.use(cors());
 
 app.use("/candidate", candidates);
 app.use("/campaigns", campaigns);
+app.use("/position", votingPositions);
 app.use("/vote", votes);
 app.use("/voter", voters);
 app.use("/admin", admin);
