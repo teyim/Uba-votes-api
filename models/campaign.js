@@ -27,18 +27,21 @@ const candidateSchema = new Schema({
     type: String,
     required: true,
   },
-  position: {
-    type: String,
-    required: true,
-  },
   votes: {
     type: Number,
   },
 });
 
-const votingPostionsSchema = new Schema({
-  abbrv: String,
-  name: String,
+const votingPostionSchema = new Schema({
+  abbrv: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  candidates: { type: [candidateSchema], required: true },
 });
 
 const campaignSchema = new Schema({
@@ -72,8 +75,7 @@ const campaignSchema = new Schema({
     max: 700,
     require: true,
   },
-  votingPositions: [votingPostionsSchema],
-  candidates: [candidateSchema],
+  votingPositions: [votingPostionSchema],
 });
 
 export const Campaign = mongoose.model("campaigns", campaignSchema);
