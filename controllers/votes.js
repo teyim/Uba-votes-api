@@ -57,28 +57,25 @@ export const addVote = async (req, res) => {
         );
     }
 
-    // const hasVoted = voter?.votes?.some(
-    //   (vote) => vote?.campaignId === campaignId
-    // );
+    const hasVoted = voter?.votes?.some(
+      (vote) => vote?.campaignId === campaignId
+    );
 
-    // if (hasVoted) {
-    //   return res
-    //     .status(400)
-    //     .send("Voter has already casted vote for this campaign");
-    // }
+    if (hasVoted) {
+      return res
+        .status(400)
+        .send("Voter has already casted vote for this campaign");
+    }
 
     const responseData = await Campaign.updateMany(
       { _id: campaignId },
       {
         $inc: {
-          "votingPositions.$[v].candidates.$[c].votes": 1,
+          "votingPositions.$[].candidates.$[c].votes": 1,
         },
       },
       {
         arrayFilters: [
-          {
-            "v.abbrv": { $in: positions },
-          },
           {
             "c._id": { $in: candidates },
           },
