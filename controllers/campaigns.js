@@ -1,9 +1,14 @@
 import { Campaign } from "../models/campaign.js";
 
+const currentDateAndTime = new Date().toISOString();
+
 export const getAllCampaigns = async (req, res) => {
   try {
     const campaigns = await Campaign.find();
-    res.json(campaigns);
+    const filteredCampaigns = campaigns.filter(
+      (campaign) => campaign.endTime > currentDateAndTime
+    );
+    res.json(filteredCampaigns);
   } catch (error) {
     res.status(400).json({ message: error });
   }
