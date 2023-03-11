@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Campaign } from "../models/campaign.js";
 
 const currentDateAndTime = new Date().toISOString();
@@ -50,6 +51,55 @@ export const getCampaign = async (req, res) => {
   try {
     const campaign = await Campaign.findById(campaignId);
     res.json(campaign);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+};
+
+export const getCampaignResult = async (req, res) => {
+  const { campaignId } = req.params;
+  
+  const campaignObjectId=mongoose.Types.ObjectId(campaignId);
+  try {
+    const campaign = await Campaign.findById(campaignId);
+
+    if (!campaign) {
+      return res.status(404).send("Campaign not found");
+    }
+
+    //check if voting for campaign has expired or has started
+    if (!currentDateAndTime > campaign.endTime)
+      return res.status(400).send("Voting is still ongoing");
+    if (currentDateAndTime < campaign.startTime)
+      return res
+        .status(400)
+        .send(
+          "voting for this campaign has not yet started.results can only be seen after voting"
+        );
+
+    // campaign results aggregation pipeline
+    const pipeline = [
+      { $match: { _id: campaignObjectId} },
+      { $unwind: "$votingPositions" },
+      { $unwind: "$votingPositions.candidates" },
+      { $sort: { "votingPositions.candidates.votes": -1 } },
+      {
+        $group: {
+          _id: "$votingPositions.name",
+          name: { $first: "$votingPositions.candidates.fullName" },
+          votes: { $first: "$votingPositions.candidates.votes" },
+        },
+      },
+    ];
+
+    //get vote results
+    const results = await Campaign.aggregate(pipeline);
+
+    if (!results) {
+      return res.status(404).send("results not found");
+    }
+
+    res.json(results);
   } catch (error) {
     res.status(400).json({ message: error });
   }
