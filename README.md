@@ -29,8 +29,6 @@ PASSWORD=<your-password-for-nodemail>
 - Start the server using `npm start`
 - The server will be running on `http://localhost:3001 
 
-```md
-
 ## API Documentation
 
 The API of this project follows the RESTful principles and uses JSON as the data format. The base URL for all requests is `http://localhost:3000/api`.
