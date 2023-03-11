@@ -5,6 +5,7 @@ import {
   getAllCampaigns,
   getCampaign,
   updateCampaign,
+  getCampaignResult,
 } from "../controllers/campaigns.js";
 import {
   verifyAdminToken,
@@ -20,6 +21,8 @@ router.post("/", verifyAdminToken, addCampaign);
 
 //get specific campaign
 router.get("/:campaignId", getCampaign);
+//
+router.get("/:campaignId/result", verifyUserToken, getCampaignResult);
 
 //delete specifc campaign
 router.delete("/:campaignId", deleteCampaign);
