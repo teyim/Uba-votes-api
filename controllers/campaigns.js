@@ -6,10 +6,10 @@ const currentDateAndTime = new Date().toISOString();
 export const getAllCampaigns = async (req, res) => {
   try {
     const campaigns = await Campaign.find();
-    const filteredCampaigns = campaigns.filter(
-      (campaign) => campaign.endTime > currentDateAndTime
-    );
-    res.json(filteredCampaigns);
+    // const filteredCampaigns = campaigns.filter(
+    //   (campaign) => campaign.endTime > currentDateAndTime
+    // );
+    res.json(campaigns);
   } catch (error) {
     res.status(400).json({ message: error });
   }
@@ -85,14 +85,16 @@ export const getCampaignResult = async (req, res) => {
       { $sort: { "votingPositions.candidates.votes": -1 } },
       {
         $group: {
-          _id: "$votingPositions.name",
-          name: { $first: "$votingPositions.candidates.fullName" },
+          _id: "$votingPositions._id",
+          positionName:{$first:"$votingPositions.name"},
+          candidateName: { $first: "$votingPositions.candidates.fullName" },
+          candidateImg:{$first:"$votingPositions.candidates.image"},
           votes: { $first: "$votingPositions.candidates.votes" },
         },
       },
     ];
 
-    //get vote results
+    //get campaign results
     const results = await Campaign.aggregate(pipeline);
 
     if (!results) {
