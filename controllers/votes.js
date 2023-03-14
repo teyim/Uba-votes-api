@@ -1,5 +1,6 @@
 import { Campaign } from "../models/campaign.js";
 import { Voter } from "../models/voter.js";
+import jwt from "jsonwebtoken";
 
 const currentDateAndTime = new Date().toISOString();
 
@@ -61,11 +62,11 @@ export const addVote = async (req, res) => {
       (vote) => vote?.campaignId === campaignId
     );
 
-    if (hasVoted) {
-      return res
-        .status(400)
-        .send("Voter has already casted vote for this campaign");
-    }
+    // if (hasVoted) {
+    //   return res
+    //     .status(400)
+    //     .send("Voter has already casted vote for this campaign");
+    // }
 
     const responseData = await Campaign.updateMany(
       { _id: campaignId },
@@ -94,9 +95,9 @@ export const addVote = async (req, res) => {
       const updatedVoter = await voter.save();
       //remove password field
       const modifiedUserData = updatedVoter.toJSON();
-      delete updatedVoter.password;
+      delete modifiedUserData.password;
 
-      const token = jwt.sign({ _id: user._id }, process.env.USER_TOKEN_SECRET);
+      const token = jwt.sign({ _id: updatedVoter._id }, process.env.USER_TOKEN_SECRET);
       return res.send({ ...modifiedUserData, token });
     } else {
       return res.status(400).send("error updating votes");
