@@ -97,7 +97,10 @@ export const addVote = async (req, res) => {
       const modifiedUserData = updatedVoter.toJSON();
       delete modifiedUserData.password;
 
-      const token = jwt.sign({ _id: updatedVoter._id }, process.env.USER_TOKEN_SECRET);
+      const token = jwt.sign(
+        { _id: updatedVoter._id },
+        process.env.USER_TOKEN_SECRET
+      );
       return res.send({ ...modifiedUserData, token });
     } else {
       return res.status(400).send("error updating votes");

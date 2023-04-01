@@ -1,15 +1,31 @@
 import mongoose from "mongoose";
 import { Campaign } from "../models/campaign.js";
+import { Voter } from "../models/voter.js";
 
 const currentDateAndTime = new Date().toISOString();
 
 export const getAllCampaigns = async (req, res) => {
+  const { voterId } = req.params;
   try {
+    //find campaign
     const campaigns = await Campaign.find();
-    // const filteredCampaigns = campaigns.filter(
-    //   (campaign) => campaign.endTime > currentDateAndTime
-    // );
-    res.json(campaigns);
+    //find voter
+    const voter = await Voter.findById(voterId);
+    if (!voter) {
+      return res.status(404).send("Voter not found");
+    }
+
+    const filteredCampaigns = campaigns.filter(
+      (campaign) =>
+        (campaign?.allowedSchool === voter?.school &&
+          campaign?.allowedDepartment === voter?.department &&
+          campaign?.allowedLevel === voter?.level) ||
+        (campaign?.allowedSchool === "All" &&
+          campaign?.allowedDepartment === "All" &&
+          campaign?.allowedLevel === 111)
+    );
+
+    res.json(filteredCampaigns);
   } catch (error) {
     res.status(400).json({ message: error });
   }
@@ -58,8 +74,8 @@ export const getCampaign = async (req, res) => {
 
 export const getCampaignResult = async (req, res) => {
   const { campaignId } = req.params;
-  
-  const campaignObjectId=mongoose.Types.ObjectId(campaignId);
+
+  const campaignObjectId = mongoose.Types.ObjectId(campaignId);
   try {
     const campaign = await Campaign.findById(campaignId);
 
@@ -79,16 +95,16 @@ export const getCampaignResult = async (req, res) => {
 
     // campaign results aggregation pipeline
     const pipeline = [
-      { $match: { _id: campaignObjectId} },
+      { $match: { _id: campaignObjectId } },
       { $unwind: "$votingPositions" },
       { $unwind: "$votingPositions.candidates" },
       { $sort: { "votingPositions.candidates.votes": -1 } },
       {
         $group: {
           _id: "$votingPositions._id",
-          positionName:{$first:"$votingPositions.name"},
+          positionName: { $first: "$votingPositions.name" },
           candidateName: { $first: "$votingPositions.candidates.fullName" },
-          candidateImg:{$first:"$votingPositions.candidates.image"},
+          candidateImg: { $first: "$votingPositions.candidates.image" },
           votes: { $first: "$votingPositions.candidates.votes" },
         },
       },

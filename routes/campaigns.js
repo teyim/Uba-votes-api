@@ -14,7 +14,7 @@ import {
 const router = express.Router();
 
 //get all campaigns
-router.get("/", verifyUserToken, getAllCampaigns);
+router.get("/:voterId", verifyUserToken, getAllCampaigns);
 
 //add campaign
 router.post("/", verifyAdminToken, addCampaign);
