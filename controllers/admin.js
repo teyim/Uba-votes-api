@@ -45,7 +45,7 @@ export const adminLogin = async (req, res) => {
     if (!validPassword) return res.status(400).send("Invalid password");
 
     const token = jwt.sign({ username }, process.env.ADMIN_TOKEN_SECRET);
-    res.header("auth-token", token).send({ admin, token });
+    res.header("Authorization", token).send({ token });
   } catch (error) {
     res.status(400).json({ message: error });
   }
