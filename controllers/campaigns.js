@@ -4,7 +4,7 @@ import { Voter } from "../models/voter.js";
 
 const currentDateAndTime = new Date().toISOString();
 
-export const getAllCampaigns = async (req, res) => {
+export const getAllUserCampaigns = async (req, res) => {
   const { voterId } = req.params;
   try {
     //find campaign
@@ -26,6 +26,17 @@ export const getAllCampaigns = async (req, res) => {
     );
 
     res.json(filteredCampaigns);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+};
+
+export const getAllCampaigns = async (req, res) => {
+  try {
+    //find campaigns
+    const campaigns = await Campaign.find();
+
+    res.json(campaigns);
   } catch (error) {
     res.status(400).json({ message: error });
   }

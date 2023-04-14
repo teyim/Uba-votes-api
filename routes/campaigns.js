@@ -3,6 +3,7 @@ import {
   addCampaign,
   deleteCampaign,
   getAllCampaigns,
+  getAllUserCampaigns,
   getCampaign,
   updateCampaign,
   getCampaignResult,
@@ -13,8 +14,12 @@ import {
 } from "../middlewares/verifyToken.js";
 const router = express.Router();
 
+
 //get all campaigns
-router.get("/:voterId", verifyUserToken, getAllCampaigns);
+router.get("/", verifyAdminToken, getAllCampaigns);
+
+//get all campaigns by user
+router.get("/:voterId", verifyUserToken, getAllUserCampaigns);
 
 //add campaign
 router.post("/", verifyAdminToken, addCampaign);
