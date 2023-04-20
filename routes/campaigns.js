@@ -14,7 +14,6 @@ import {
 } from "../middlewares/verifyToken.js";
 const router = express.Router();
 
-
 //get all campaigns
 router.get("/", verifyAdminToken, getAllCampaigns);
 
@@ -22,7 +21,7 @@ router.get("/", verifyAdminToken, getAllCampaigns);
 router.get("/:voterId", verifyUserToken, getAllUserCampaigns);
 
 //add campaign
-router.post("/", verifyAdminToken, addCampaign);
+router.post("/createCampaign", verifyAdminToken, addCampaign);
 
 //get specific campaign
 router.get("/:campaignId", verifyUserToken, getCampaign);
