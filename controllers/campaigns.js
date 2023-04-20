@@ -67,7 +67,7 @@ export const addCampaign = async (req, res) => {
   });
   try {
     await candidateInstance.save();
-    res.send("campaign saved sucessfully!!");
+    res.send({ message: "campaign saved sucessfully!!" });
   } catch (error) {
     res.status(400).json({ message: error });
   }
@@ -137,7 +137,7 @@ export const getCampaignResult = async (req, res) => {
 export const deleteCampaign = async (req, res) => {
   const { campaignId } = req.params;
   try {
-    const campaign = await Candidate.remove({ _id: campaignId });
+    const campaign = await Campaign.deleteOne({ _id: campaignId });
     res.json(campaign);
   } catch (error) {
     res.status(400).json({ message: error });
