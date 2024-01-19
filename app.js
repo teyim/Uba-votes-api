@@ -26,12 +26,12 @@ app.use("/vote", votes);
 app.use("/voter", voters);
 app.use("/admin", admin);
 
-//routes
+// routes
 app.get("/", (req, res) => {
   res.send("I am home");
 });
 
-//database
+// database
 const database = () => {
   mongoose.set("strictQuery", false);
 
